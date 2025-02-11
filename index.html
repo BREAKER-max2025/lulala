@@ -1,50 +1,326 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古风利率计算器</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>3日天气预报</title>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #ffffff, #e6f7ff);
+            border-radius: 20px; /* 增加圆角 */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* 增强阴影效果 */
+            width: 90%;
+            max-width: 400px; /* 主界面宽度适中 */
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            max-height: 80vh; /* 缩短主界面高度 */
+            overflow-y: auto; /* 如果内容超出，允许滚动 */
+        }
+
+        h1 {
+            font-size: 1.6em; /* 字体稍小一些，适应窄屏 */
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px; /* 圆角效果 */
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px; /* 圆角效果 */
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .weather-result {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .forecast-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 15px; /* 更大的圆角 */
+            color: #fff; /* 文字颜色为白色 */
+            height: 100px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+        }
+
+        /* 深色渐变背景 */
+        .forecast-item:nth-child(1) {
+            background: linear-gradient(135deg, #4a69bd, #6a82fb); /* 第一天：深蓝紫 */
+        }
+
+        .forecast-item:nth-child(2) {
+            background: linear-gradient(135deg, #f77062, #fe5196); /* 第二天：深红粉 */
+        }
+
+        .forecast-item:nth-child(3) {
+            background: linear-gradient(135deg, #0ba360, #3cba92); /* 第三天：深绿青 */
+        }
+
+        .forecast-item h3 {
+            font-size: 1.2em;
+            margin: 0;
+            color: #ffeb3b; /* 鲜艳的黄色 */
+        }
+
+        .forecast-item p {
+            font-size: 1em;
+            margin: 5px 0;
+            color: #bbdefb; /* 浅蓝色 */
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 180px; /* 缩短图表高度 */
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .poem {
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* 动态背景 */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #d2fdff, #ffdde1); /* 清新渐变背景 */
+            opacity: 0.8;
+        }
+
+        /* 主界面右下角签名 */
+        .signature {
+            position: absolute;
+            bottom: 2px;
+            right: 10px;
+            font-size: 0.5em;
+            color: #aaa;
+        }
+    </style>
 </head>
 <body>
+    <!-- 动态背景 -->
     <div class="background"></div>
-    <div class="container">
-        <h1>古风利率计算器 📝</h1>
-        <div class="calculator-container">
-            <!-- 存款计算器 -->
-            <div class="calculator">
-                <h2>存款计算器 💰</h2>
-                <label for="deposit-amount">存款金额:</label>
-                <input type="number" id="deposit-amount" placeholder="请输入金额">
-                
-                <label for="deposit-time">存款时间(年):</label>
-                <input type="number" id="deposit-time" placeholder="请输入时间">
-                
-                <label for="deposit-rate">年利率(%):</label>
-                <input type="number" id="deposit-rate" placeholder="请输入利率">
-                
-                <button onclick="calculateDeposit()">计算存款收益 🧮</button>
-                <p id="deposit-result">存款收益: </p>
-            </div>
 
-            <!-- 借贷计算器 -->
-            <div class="calculator">
-                <h2>借贷计算器 💳</h2>
-                <label for="loan-amount">借贷金额:</label>
-                <input type="number" id="loan-amount" placeholder="请输入金额">
-                
-                <label for="loan-time">借贷时间(年):</label>
-                <input type="number" id="loan-time" placeholder="请输入时间">
-                
-                <label for="loan-rate">年利率(%):</label>
-                <input type="number" id="loan-rate" placeholder="请输入利率">
-                
-                <button onclick="calculateLoan()">计算借贷成本 🧾</button>
-                <p id="loan-result">借贷成本: </p>
-            </div>
+    <div class="container">
+        <h1>3日天气预报 🌤️</h1>
+        <select id="citySelect">
+            <option value="Harbin">哈尔滨</option>
+            <option value="Beijing">北京</option>
+            <option value="Shanghai">上海</option>
+            <option value="Guangzhou">广州</option>
+            <option value="Shenzhen">深圳</option>
+            <option value="Chengdu">成都</option>
+            <option value="Chongqing">重庆</option>
+            <option value="Nanjing">南京</option>
+            <option value="Hangzhou">杭州</option>
+            <option value="Wuhan">武汉</option>
+            <option value="Xi'an">西安</option>
+            <option value="London">伦敦</option>
+        </select>
+        <button onclick="getWeather()">获取天气</button>
+        <div id="weatherResult" class="weather-result"></div>
+        <div class="chart-container">
+            <!-- 确保这是一个 canvas 元素 -->
+            <canvas id="chartCanvas"></canvas>
         </div>
+        <div id="loading" class="loading" style="display: none;">加载中...</div>
+        <div class="poem" id="poem">每日一句美好古诗：春眠不觉晓，处处闻啼鸟。</div>
+        <div class="signature">@杜鹏飞</div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const apiKey = '09fed44aa9ed41be2bc65297bed7d85a'; // 替换为你的 API 密钥
+        let chartInstance = null; // 用于存储 Chart 实例
+
+        // 获取天气数据
+        async function getWeather() {
+            const cityCode = document.getElementById('citySelect').value;
+
+            // 显示加载动画
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('weatherResult').innerHTML = '';
+
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityCode)}&appid=${apiKey}&units=metric&lang=zh_cn`;
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error('无效的城市名称或API密钥错误');
+                }
+
+                const data = await response.json();
+                displayWeather(data);
+                updateChart(data);
+                updatePoem();
+            } catch (error) {
+                document.getElementById('weatherResult').innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // 显示天气结果
+        function displayWeather(data) {
+            const forecast = [];
+            for (let i = 0; i < 3; i++) {
+                const dayData = data.list[i * 8]; // 每隔8个数据点取一天的数据
+                const date = new Date(dayData.dt * 1000).toLocaleDateString('zh-CN');
+                const temp = Math.round(dayData.main.temp);
+                const description = dayData.weather[0].description;
+
+                forecast.push({
+                    date,
+                    temp,
+                    description
+                });
+            }
+
+            let resultHtml = '<h2>未来三天天气预报</h2>';
+            forecast.forEach((day, index) => {
+                resultHtml += `
+                    <div class="forecast-item">
+                        <div>
+                            <h3>${day.date}</h3>
+                            <p>温度: ${day.temp}°C</p>
+                            <p>天气: ${day.description}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('weatherResult').innerHTML = resultHtml;
+        }
+
+        // 绘制24小时温度曲线图
+        function updateChart(data) {
+            const temps = data.list.map(item => item.main.temp);
+            const labels = data.list.map(item => new Date(item.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+            // 如果已有图表实例，先销毁
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '温度 (°C)',
+                        data: temps,
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4, // 平滑曲线
+                        pointRadius: 4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#007bff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxTicksLimit: 6
+                            }
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    },
+                    animations: {
+                        tension: {
+                            duration: 1000,
+                            easing: 'linear',
+                            from: 1,
+                            to: 0.4
+                        }
+                    }
+                }
+            });
+        }
+
+        // 更新每日一句古诗
+        function updatePoem() {
+            const poems = [
+                "春眠不觉晓，处处闻啼鸟。",
+                "明月几时有，把酒问青天。",
+                "白日依山尽，黄河入海流。",
+                "床前明月光，疑是地上霜。",
+                "但愿人长久，千里共婵娟。"
+            ];
+            const randomIndex = Math.floor(Math.random() * poems.length);
+            document.getElementById('poem').innerText = `每日一句美好古诗：${poems[randomIndex]}`;
+        }
+
+        // 页面加载时默认显示哈尔滨的天气
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('citySelect').value = 'Harbin';
+            getWeather();
+        });
+    </script>
 </body>
 </html>
