@@ -1,0 +1,11 @@
+# 创建并编辑index.html文件
+touch index.html
+nano index.html  # 或使用你喜欢的文本编辑器
+
+# 添加一些基本内容
+echo "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><title>My GitHub Pages Site</title></head><body><h1>Hello, World!</h1></body></html>" > index.html
+
+# 添加并提交文件
+git add index.html
+git commit -m "Add index.html"
+git push origin main  # 或 gh-pages，取决于你的配置
