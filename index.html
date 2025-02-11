@@ -3,7 +3,56 @@ touch index.html
 nano index.html  # 或使用你喜欢的文本编辑器
 
 # 添加一些基本内容
-echo "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><title>My GitHub Pages Site</title></head><body><h1>Hello, World!</h1></body></html>" > index.html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古风利率计算器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <h1>古风利率计算器 📝</h1>
+        <div class="calculator-container">
+            <!-- 存款计算器 -->
+            <div class="calculator">
+                <h2>存款计算器 💰</h2>
+                <label for="deposit-amount">存款金额:</label>
+                <input type="number" id="deposit-amount" placeholder="请输入金额">
+                
+                <label for="deposit-time">存款时间(年):</label>
+                <input type="number" id="deposit-time" placeholder="请输入时间">
+                
+                <label for="deposit-rate">年利率(%):</label>
+                <input type="number" id="deposit-rate" placeholder="请输入利率">
+                
+                <button onclick="calculateDeposit()">计算存款收益 🧮</button>
+                <p id="deposit-result">存款收益: </p>
+            </div>
+
+            <!-- 借贷计算器 -->
+            <div class="calculator">
+                <h2>借贷计算器 💳</h2>
+                <label for="loan-amount">借贷金额:</label>
+                <input type="number" id="loan-amount" placeholder="请输入金额">
+                
+                <label for="loan-time">借贷时间(年):</label>
+                <input type="number" id="loan-time" placeholder="请输入时间">
+                
+                <label for="loan-rate">年利率(%):</label>
+                <input type="number" id="loan-rate" placeholder="请输入利率">
+                
+                <button onclick="calculateLoan()">计算借贷成本 🧾</button>
+                <p id="loan-result">借贷成本: </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
 # 添加并提交文件
 git add index.html
